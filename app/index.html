@@ -448,6 +448,7 @@ const ICONS = {
   empty:'<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v9M19 10v9M3 21h18"/></svg>',
   back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
   lock:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  user:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 function icon(name){return ICONS[name]||'';}
 
@@ -530,6 +531,27 @@ let state = {
 
 function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2)); }
 
+
+const PHONE_PREFIXES = [
+  {code:'+598', country:'🇺🇾 Uruguay'},
+  {code:'+54', country:'🇦🇷 Argentina'},
+  {code:'+55', country:'🇧🇷 Brasil'},
+  {code:'+56', country:'🇨🇱 Chile'},
+  {code:'+591', country:'🇧🇴 Bolivia'},
+  {code:'+595', country:'🇵🇾 Paraguay'},
+  {code:'+51', country:'🇵🇪 Perú'},
+  {code:'+593', country:'🇪🇨 Ecuador'},
+  {code:'+57', country:'🇨🇴 Colombia'},
+  {code:'+58', country:'🇻🇪 Venezuela'},
+  {code:'+52', country:'🇲🇽 México'},
+  {code:'+1', country:'🇺🇸 EE.UU. / Canadá'},
+  {code:'+34', country:'🇪🇸 España'},
+  {code:'+44', country:'🇬🇧 Reino Unido'},
+  {code:'+49', country:'🇩🇪 Alemania'},
+  {code:'+33', country:'🇫🇷 Francia'},
+  {code:'+39', country:'🇮🇹 Italia'},
+  {code:'+351', country:'🇵🇹 Portugal'},
+];
 
 /* ============================== AUTH SCREEN ============================== */
 let authMode = 'login';
@@ -686,6 +708,7 @@ const NAV_ITEMS = [
   {id:'inversiones', label:'Inversiones', icon:'trend'},
   {id:'cuentas', label:'Cuentas', icon:'bank'},
   {id:'metricas', label:'Métricas', icon:'chart'},
+  {id:'perfil', label:'Perfil', icon:'user'},
 ];
 
 function renderNav(){
@@ -693,8 +716,6 @@ function renderNav(){
   sidebar.innerHTML = `
     <div class="brand"><span class="mark">N</span>Nomo</div>
     ${NAV_ITEMS.map(n=>`<button class="nav-item ${state.view===n.id?'active':''}" data-nav="${n.id}">${icon(n.icon)}${n.label}</button>`).join('')}
-    <div class="spacer"></div>
-    <button class="nav-item ${state.view==='ajustes'?'active':''}" data-nav="ajustes">${icon('gear')}Ajustes</button>
     <div class="nav-foot">Tus datos se guardan de forma privada en este artefacto.</div>
   `;
   const bottom = document.getElementById('bottom-nav');
@@ -1690,6 +1711,7 @@ function renderAll(){
   else if(state.view==='cuentas') renderCuentas();
   else if(state.view==='metricas') renderMetricas();
   else if(state.view==='movimientos') renderMovimientos();
+  else if(state.view==='perfil') renderPerfil();
   else if(state.view==='ajustes') renderAjustes();
   window.scrollTo(0,0);
 }
